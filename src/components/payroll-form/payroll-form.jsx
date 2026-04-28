@@ -46,8 +46,16 @@ const PayrollForm = () => {
       note: employee.notes
     };
 
-    // Pass data to service
-    await EmployeeService.addEmployee(employeeData);
+    try {
+      // Pass data to service
+      const response = await EmployeeService.addEmployee(employeeData);
+      console.log("Response:", response.data);
+      alert("Employee Added Successfully!");
+      reset(); // Clear form after success
+    } catch (error) {
+      console.error("Error adding employee:", error);
+      alert("Error adding employee! Check console for details.");
+    }
   };
 
   const reset = () => {

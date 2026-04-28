@@ -11,7 +11,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/add" element={<PayrollForm />} />
-          {/* Edit route will be added later */}
+          <Route path="/edit/:id" element={<PayrollForm />} />
         </Routes>
       </div>
     </Router>

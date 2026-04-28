@@ -10,6 +10,14 @@ class EmployeeService {
   getAllEmployees() {
     return AxiosService.getService(BASE_URL);
   }
+
+  getEmployeeById(id) {
+    return AxiosService.getService(`${BASE_URL}/${id}`);
+  }
+
+  updateEmployee(id, employeeData) {
+    return AxiosService.putService(`${BASE_URL}/${id}`, employeeData);
+  }
 }
 
 export default new EmployeeService();

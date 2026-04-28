@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import './payroll-form.scss';
 import EmployeeService from '../../services/EmployeeService';
 
 const PayrollForm = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
+
   const [employee, setEmployee] = useState({
     name: '',
     profileUrl: '',
@@ -16,6 +18,36 @@ const PayrollForm = () => {
     year: '2020',
     notes: ''
   });
+
+  useEffect(() => {
+    if (id) {
+      loadEmployee();
+    }
+  }, [id]);
+
+  const loadEmployee = async () => {
+    try {
+      const response = await EmployeeService.getEmployeeById(id);
+      const data = response.data;
+      
+      // Parse startDate "1 Jan 2020" back into day, month, year
+      const dateParts = data.startDate ? data.startDate.split(' ') : ['1', 'Jan', '2020'];
+      
+      setEmployee({
+        name: data.name,
+        profileUrl: data.profilePic,
+        gender: data.gender,
+        department: data.department || [],
+        salary: data.salary,
+        day: dateParts[0],
+        month: dateParts[1],
+        year: dateParts[2],
+        notes: data.note
+      });
+    } catch (error) {
+      console.error("Error loading employee data", error);
+    }
+  };
 
   const changeValue = (event) => {
     const { name, value } = event.target;
@@ -49,15 +81,20 @@ const PayrollForm = () => {
     };
 
     try {
-      // Pass data to service
-      const response = await EmployeeService.addEmployee(employeeData);
-      console.log("Response:", response.data);
-      alert("Employee Added Successfully!");
+      if (id) {
+        // Update existing employee
+        await EmployeeService.updateEmployee(id, employeeData);
+        alert("Employee Updated Successfully!");
+      } else {
+        // Pass data to service
+        await EmployeeService.addEmployee(employeeData);
+        alert("Employee Added Successfully!");
+      }
       reset(); // Clear form after success
       navigate("/"); // Navigate back to home page
     } catch (error) {
-      console.error("Error adding employee:", error);
-      alert("Error adding employee! Check console for details.");
+      console.error("Error saving employee:", error);
+      alert("Error saving employee! Check console for details.");
     }
   };
 
@@ -89,19 +126,19 @@ const PayrollForm = () => {
           <label className="label text" htmlFor="profileUrl">Profile Image</label>
           <div className="profile-radio-content">
             <label>
-              <input type="radio" id="profile1" name="profileUrl" value="https://ui-avatars.com/api/?name=P1&background=D8E2DC" onChange={changeValue} required />
+              <input type="radio" id="profile1" name="profileUrl" value="https://ui-avatars.com/api/?name=P1&background=D8E2DC" onChange={changeValue} checked={employee.profileUrl === 'https://ui-avatars.com/api/?name=P1&background=D8E2DC'} required />
               <img className="profile-img" src="https://ui-avatars.com/api/?name=P1&background=D8E2DC" alt="profile1" />
             </label>
             <label>
-              <input type="radio" id="profile2" name="profileUrl" value="https://ui-avatars.com/api/?name=P2&background=FFE5D9" onChange={changeValue} />
+              <input type="radio" id="profile2" name="profileUrl" value="https://ui-avatars.com/api/?name=P2&background=FFE5D9" onChange={changeValue} checked={employee.profileUrl === 'https://ui-avatars.com/api/?name=P2&background=FFE5D9'} />
               <img className="profile-img" src="https://ui-avatars.com/api/?name=P2&background=FFE5D9" alt="profile2" />
             </label>
             <label>
-              <input type="radio" id="profile3" name="profileUrl" value="https://ui-avatars.com/api/?name=P3&background=FFCAD4" onChange={changeValue} />
+              <input type="radio" id="profile3" name="profileUrl" value="https://ui-avatars.com/api/?name=P3&background=FFCAD4" onChange={changeValue} checked={employee.profileUrl === 'https://ui-avatars.com/api/?name=P3&background=FFCAD4'} />
               <img className="profile-img" src="https://ui-avatars.com/api/?name=P3&background=FFCAD4" alt="profile3" />
             </label>
             <label>
-              <input type="radio" id="profile4" name="profileUrl" value="https://ui-avatars.com/api/?name=P4&background=9D8189&color=fff" onChange={changeValue} />
+              <input type="radio" id="profile4" name="profileUrl" value="https://ui-avatars.com/api/?name=P4&background=9D8189&color=fff" onChange={changeValue} checked={employee.profileUrl === 'https://ui-avatars.com/api/?name=P4&background=9D8189&color=fff'} />
               <img className="profile-img" src="https://ui-avatars.com/api/?name=P4&background=9D8189&color=fff" alt="profile4" />
             </label>
           </div>
@@ -111,10 +148,10 @@ const PayrollForm = () => {
           <label className="label text" htmlFor="gender">Gender</label>
           <div className="gender-radio-content">
             <label>
-              <input type="radio" id="male" name="gender" value="Male" onChange={changeValue} required /> Male
+              <input type="radio" id="male" name="gender" value="Male" onChange={changeValue} checked={employee.gender === 'Male'} required /> Male
             </label>
             <label>
-              <input type="radio" id="female" name="gender" value="Female" onChange={changeValue} /> Female
+              <input type="radio" id="female" name="gender" value="Female" onChange={changeValue} checked={employee.gender === 'Female'} /> Female
             </label>
           </div>
         </div>
@@ -123,19 +160,19 @@ const PayrollForm = () => {
           <label className="label text" htmlFor="department">Department</label>
           <div className="department-content">
             <label>
-              <input type="checkbox" name="department" value="HR" onChange={onCheckChange} /> HR
+              <input type="checkbox" name="department" value="HR" onChange={onCheckChange} checked={employee.department.includes('HR')} /> HR
             </label>
             <label>
-              <input type="checkbox" name="department" value="Sales" onChange={onCheckChange} /> Sales
+              <input type="checkbox" name="department" value="Sales" onChange={onCheckChange} checked={employee.department.includes('Sales')} /> Sales
             </label>
             <label>
-              <input type="checkbox" name="department" value="Finance" onChange={onCheckChange} /> Finance
+              <input type="checkbox" name="department" value="Finance" onChange={onCheckChange} checked={employee.department.includes('Finance')} /> Finance
             </label>
             <label>
-              <input type="checkbox" name="department" value="Engineer" onChange={onCheckChange} /> Engineer
+              <input type="checkbox" name="department" value="Engineer" onChange={onCheckChange} checked={employee.department.includes('Engineer')} /> Engineer
             </label>
             <label>
-              <input type="checkbox" name="department" value="Others" onChange={onCheckChange} /> Others
+              <input type="checkbox" name="department" value="Others" onChange={onCheckChange} checked={employee.department.includes('Others')} /> Others
             </label>
           </div>
         </div>

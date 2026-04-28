@@ -64,7 +64,9 @@ const Home = () => {
                   <td>{formatSalary(emp.salary)}</td>
                   <td>{emp.startDate}</td>
                   <td className="action-icons">
-                    <span role="img" aria-label="edit" style={{cursor: 'pointer'}} title="Edit (Coming Soon)">✏️</span>
+                    <Link to={`/edit/${emp.id}`} style={{textDecoration: 'none'}}>
+                      <span role="img" aria-label="edit" style={{cursor: 'pointer'}} title="Edit">✏️</span>
+                    </Link>
                     <span role="img" aria-label="delete" style={{cursor: 'pointer'}} title="Delete (Coming Soon)">🗑️</span>
                   </td>
                 </tr>

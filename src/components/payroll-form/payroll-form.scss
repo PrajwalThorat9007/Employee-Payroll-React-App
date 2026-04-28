@@ -1,0 +1,163 @@
+.form-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+  padding: 40px 20px;
+}
+
+.form {
+  background: white;
+  width: 100%;
+  max-width: 800px;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+  }
+
+  .form-head {
+    font-size: 28px;
+    color: #42515f;
+    font-weight: 700;
+    margin-bottom: 30px;
+    text-align: center;
+    position: relative;
+
+    &::after {
+      content: '';
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, #82A822 0%, #A2C842 100%);
+      position: absolute;
+      bottom: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      border-radius: 2px;
+    }
+  }
+
+  .row-content {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 25px;
+
+    .label {
+      font-size: 16px;
+      color: #333;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .input {
+      padding: 12px 15px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 16px;
+      color: #333;
+      outline: none;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+      &:focus {
+        border-color: #82A822;
+        box-shadow: 0 0 0 3px rgba(130, 168, 34, 0.2);
+      }
+    }
+
+    .profile-radio-content, .gender-radio-content, .department-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      align-items: center;
+
+      label {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+        font-size: 15px;
+        color: #555;
+
+        .profile-img {
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 2px solid transparent;
+          transition: border-color 0.2s ease;
+        }
+
+        input[type="radio"]:checked + .profile-img {
+          border-color: #82A822;
+        }
+      }
+    }
+
+    .salary-output {
+      margin-left: 15px;
+      font-weight: bold;
+      color: #82A822;
+    }
+
+    .date-content {
+      display: flex;
+      gap: 10px;
+
+      select {
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+        outline: none;
+        background: #fff;
+        cursor: pointer;
+
+        &:focus {
+          border-color: #82A822;
+        }
+      }
+    }
+  }
+
+  .button-content {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 40px;
+
+    .resetButton, .submitButton {
+      padding: 12px 30px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .resetButton {
+      background: #e0e0e0;
+      color: #333;
+
+      &:hover {
+        background: #d4d4d4;
+      }
+    }
+
+    .submitButton {
+      background: #82A822;
+      color: #fff;
+      box-shadow: 0 4px 10px rgba(130, 168, 34, 0.3);
+
+      &:hover {
+        background: #71931c;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(130, 168, 34, 0.4);
+      }
+    }
+  }
+}

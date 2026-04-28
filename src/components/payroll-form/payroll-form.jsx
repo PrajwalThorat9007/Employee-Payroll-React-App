@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './payroll-form.scss';
+import EmployeeService from '../../services/EmployeeService';
 
 const PayrollForm = () => {
   const [employee, setEmployee] = useState({
@@ -28,9 +29,44 @@ const PayrollForm = () => {
     }
   };
 
+  const save = async (event) => {
+    event.preventDefault(); // Prevent page reload
+    
+    // Format the date
+    const startDate = `${employee.day} ${employee.month} ${employee.year}`;
+    
+    // Create the final object to send
+    const employeeData = {
+      name: employee.name,
+      profilePic: employee.profileUrl,
+      gender: employee.gender,
+      department: employee.department,
+      salary: employee.salary,
+      startDate: startDate,
+      note: employee.notes
+    };
+
+    // Pass data to service
+    await EmployeeService.addEmployee(employeeData);
+  };
+
+  const reset = () => {
+    setEmployee({
+      name: '',
+      profileUrl: '',
+      gender: '',
+      department: [],
+      salary: 400000,
+      day: '1',
+      month: 'Jan',
+      year: '2020',
+      notes: ''
+    });
+  };
+
   return (
     <div className="form-content">
-      <form className="form" action="#">
+      <form className="form" onSubmit={save} action="#">
         <div className="form-head">Employee Payroll Form</div>
 
         <div className="row-content">
@@ -42,7 +78,7 @@ const PayrollForm = () => {
           <label className="label text" htmlFor="profileUrl">Profile Image</label>
           <div className="profile-radio-content">
             <label>
-              <input type="radio" id="profile1" name="profileUrl" value="https://ui-avatars.com/api/?name=P1&background=D8E2DC" onChange={changeValue} />
+              <input type="radio" id="profile1" name="profileUrl" value="https://ui-avatars.com/api/?name=P1&background=D8E2DC" onChange={changeValue} required />
               <img className="profile-img" src="https://ui-avatars.com/api/?name=P1&background=D8E2DC" alt="profile1" />
             </label>
             <label>
@@ -64,7 +100,7 @@ const PayrollForm = () => {
           <label className="label text" htmlFor="gender">Gender</label>
           <div className="gender-radio-content">
             <label>
-              <input type="radio" id="male" name="gender" value="Male" onChange={changeValue} /> Male
+              <input type="radio" id="male" name="gender" value="Male" onChange={changeValue} required /> Male
             </label>
             <label>
               <input type="radio" id="female" name="gender" value="Female" onChange={changeValue} /> Female
@@ -111,7 +147,7 @@ const PayrollForm = () => {
               {['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'].map((month, i) => <option key={month} value={month}>{month}</option>)}
             </select>
             <select id="year" name="year" value={employee.year} onChange={changeValue}>
-              {['2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016'].map(year => <option key={year} value={year}>{year}</option>)}
+              {['2024', '2023', '2022', '2021', '2020'].map(year => <option key={year} value={year}>{year}</option>)}
             </select>
           </div>
         </div>
@@ -122,7 +158,7 @@ const PayrollForm = () => {
         </div>
 
         <div className="button-content">
-          <button type="button" className="resetButton">Reset</button>
+          <button type="button" className="resetButton" onClick={reset}>Reset</button>
           <button type="submit" className="submitButton" id="submitButton">Submit</button>
         </div>
       </form>

@@ -23,6 +23,20 @@ const Home = () => {
     return new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumSignificantDigits: 3 }).format(salary);
   };
 
+  const removeEmployee = async (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this employee?");
+    if (confirmDelete) {
+      try {
+        await EmployeeService.deleteEmployee(id);
+        setEmployees(employees.filter(emp => emp.id !== id));
+        alert("Employee deleted successfully!");
+      } catch (error) {
+        console.error("Error deleting employee:", error);
+        alert("Error deleting employee!");
+      }
+    }
+  };
+
   return (
     <div className="main-content">
       <div className="header-content">
@@ -67,7 +81,7 @@ const Home = () => {
                     <Link to={`/edit/${emp.id}`} style={{textDecoration: 'none'}}>
                       <span role="img" aria-label="edit" style={{cursor: 'pointer'}} title="Edit">✏️</span>
                     </Link>
-                    <span role="img" aria-label="delete" style={{cursor: 'pointer'}} title="Delete (Coming Soon)">🗑️</span>
+                    <span role="img" aria-label="delete" style={{cursor: 'pointer'}} title="Delete" onClick={() => removeEmployee(emp.id)}>🗑️</span>
                   </td>
                 </tr>
               ))

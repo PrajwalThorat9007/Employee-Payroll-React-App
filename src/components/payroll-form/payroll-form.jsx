@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import './payroll-form.scss';
 import EmployeeService from '../../services/EmployeeService';
 
 const PayrollForm = () => {
+  const navigate = useNavigate();
   const [employee, setEmployee] = useState({
     name: '',
     profileUrl: '',
@@ -52,6 +54,7 @@ const PayrollForm = () => {
       console.log("Response:", response.data);
       alert("Employee Added Successfully!");
       reset(); // Clear form after success
+      navigate("/"); // Navigate back to home page
     } catch (error) {
       console.error("Error adding employee:", error);
       alert("Error adding employee! Check console for details.");
@@ -166,6 +169,7 @@ const PayrollForm = () => {
         </div>
 
         <div className="button-content">
+          <Link to="/" className="resetButton" style={{textDecoration: 'none', display: 'inline-block', textAlign: 'center'}}>Cancel</Link>
           <button type="button" className="resetButton" onClick={reset}>Reset</button>
           <button type="submit" className="submitButton" id="submitButton">Submit</button>
         </div>

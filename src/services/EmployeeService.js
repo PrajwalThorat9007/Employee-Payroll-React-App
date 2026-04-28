@@ -6,6 +6,10 @@ class EmployeeService {
   addEmployee(employeeData) {
     return AxiosService.postService(BASE_URL, employeeData);
   }
+
+  getAllEmployees() {
+    return AxiosService.getService(BASE_URL);
+  }
 }
 
 export default new EmployeeService();

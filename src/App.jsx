@@ -2,15 +2,16 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import PayrollForm from './components/payroll-form/payroll-form';
+import Home from './components/home/home';
 
 function App() {
   return (
     <Router>
       <div className="app">
         <Routes>
-          <Route path="/" element={<Navigate to="/add" />} />
+          <Route path="/" element={<Home />} />
           <Route path="/add" element={<PayrollForm />} />
-          {/* We will add Home and Edit routes in later UCs */}
+          {/* Edit route will be added later */}
         </Routes>
       </div>
     </Router>
